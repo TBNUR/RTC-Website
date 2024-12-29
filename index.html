@@ -1,217 +1,62 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Road Traffic Control</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .container {
-            text-align: center;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 30px 40px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 255, 255, 0.2);
-            margin-bottom: 20px;
-        }
-        h1 {
-            margin: 0 0 20px;
-            font-size: 2.5rem;
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
-        }
-        .clock {
-            font-size: 4rem;
-            margin: 20px 0;
-            color: #00ff00;
-            text-shadow: 0 0 15px #00ff00;
-        }
-        .message {
-            font-size: 1.5rem;
-            margin-top: 10px;
-            color: #f0f0f0;
-            text-shadow: 0 0 10px #00ffff;
-        }
-        .calendar {
-            text-align: center;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 8px 15px rgba(0, 255, 255, 0.2);
-            font-size: 1.2rem;
-        }
-        .calendar h2 {
-            margin-bottom: 10px;
-            color: #00ffff;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0 auto;
-        }
-        table th, table td {
-            padding: 10px;
-            border: 1px solid #00ffff;
-            text-align: center;
-        }
-        table th {
-            color: #00ffff;
-        }
-        table td {
-            color: #ffffff;
-        }
-        .today {
-            background: linear-gradient(135deg, #00ff99, #00ffff);
-            color: #000000;
-            font-weight: bold;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #00ffff, 0 0 20px #00ff99;
-        }
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
-            }
-            .clock {
-                font-size: 3rem;
-            }
-            .message {
-                font-size: 1.2rem;
-            }
-            .calendar {
-                font-size: 1rem;
-            }
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTC Audio Test</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Road Traffic Control Jam Istirahat</h1>
-        <div class="clock" id="clock">00:00:00</div>
-        <div class="message" id="message"></div>
-    </div>
-    <div class="calendar">
-        <h2>Kalendar 2024</h2>
-        <table id="calendar">
-            <thead>
-                <tr>
-                    <th>Sun</th>
-                    <th>Mon</th>
-                    <th>Tue</th>
-                    <th>Wed</th>
-                    <th>Thu</th>
-                    <th>Fri</th>
-                    <th>Sat</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Calendar days will be injected here -->
-            </tbody>
-        </table>
-    </div>
-
-    <script type="text/javascript">
-        // Schedule and Sound Configuration
+    <h1>RTC Audio Test</h1>
+    <p id="message">Jadwal istirahat akan ditampilkan di sini.</p>
+    <audio id="audio" preload="auto"></audio>
+    <script>
+        // Jadwal Istirahat dengan URL Audio dan Waktu Berakhir
         const schedules = [
-            { start: "08:45", end: "09:00", text: "RTC 1 Istirahat Pertama", sound: "RTC 1 Memasuki Waktu Istirahat Pertama" },
-            { start: "09:00", end: "09:15", text: "RTC 2 Istirahat Pertama", sound: "RTC 2 Memasuki Waktu Istirahat Pertama" },
-            { start: "09:15", end: "09:30", text: "RTC 3 Istirahat Pertama", sound: "hRTC 3 Memasuki Waktu Istirahat Pertama" },
-            { start: "12:00", end: "12:15", text: "RTC 1 Istirahat Kedua", sound: "RTC 1 Memasuki Waktu Istirahat Kedua" },
-            { start: "12:15", end: "12:30", text: "RTC 2 Istirahat Kedua", sound: "RTC 2 Memasuki Waktu Istirahat Kedua" },
-            { start: "12:30", end: "12:45", text: "RTC 3 Istirahat Kedua", sound: "RTC 3 Memasuki Waktu Istirahat Kedua" },
-            { start: "13:30", end: "14:00", text: "RTC 1 Istirahat Ketiga", sound: "RTC 1 Memasuki Waktu Istirahat Ketiga" },
-            { start: "14:00", end: "14:30", text: "RTC 2 Istirahat Ketiga", sound: "RTC 2 Memasuki Waktu Istirahat Ketiga" },
-            { start: "14:30", end: "15:00", text: "RTC 3 Istirahat Ketiga", sound: "RTC 3 Memasuki Waktu Istirahat Ketiga" },
-            { start: "15:30", end: "15:45", text: "RTC 1 Istirahat Pertama", sound: "RTC 1 Memasuki Waktu Istirahat Pertama" },
-            { start: "15:45", end: "16:00", text: "RTC 2 Istirahat Pertama", sound: "RTC 2 Memasuki Waktu Istirahat Pertama" },
-            { start: "14:24", end: "16:15", text: "RTC 3 Istirahat Pertama", soundFile: "https://soundcloud.com/tubagus-nur-muhammad-rizqi-zakaria/rtc-3-memasuki-waktu-istirahat" },
-            { start: "18:00", end: "18:30", text: "RTC 1 Istirahat Kedua", sound: "RTC 1 Memasuki Waktu Istirahat Kedua" },
-            { start: "18:30", end: "19:00", text: "RTC 2 Istirahat Kedua", sound: "RTC 2 Memasuki Waktu Istirahat Kedua" },
-            { start: "19:00", end: "19:30", text: "RTC 3 Istirahat Kedua", sound: "RTC 3 Memasuki Waktu Istirahat Kedua" },
-            { start: "20:00", end: "20:15", text: "RTC 1 Istirahat Ketiga", sound: "RTC 1 Memasuki Waktu Istirahat Ketiga" },
-            { start: "20:15", end: "20:30", text: "RTC 2 Istirahat Ketiga", sound: "RTC 2 Memasuki Waktu Istirahat Ketiga" },
-            { start: "20:30", end: "20:45", text: "RTC 3 Istirahat Ketiga", sound: "RTC 3 Memasuki Waktu Istirahat Ketiga" },
-            { start: "00:45", end: "01:00", text: "RTC 1 Istirahat Pertama", sound: "RTC 1 Memasuki Waktu Istirahat Pertama" },
-            { start: "01:00", end: "01:15", text: "RTC 2 Istirahat Pertama", sound: "RTC 2 Memasuki Waktu Istirahat Pertama" },
-            { start: "01:15", end: "01:30", text: "RTC 3 Istirahat Pertama", sound: "RTC 3 Memasuki Waktu Istirahat Pertama" },
-            { start: "03:00", end: "03:15", text: "RTC 1 Istirahat Kedua", sound: "RTC 1 Memasuki Waktu Istirahat Kedua" },
-            { start: "03:15", end: "03:30", text: "RTC 2 Istirahat Kedua", sound: "RTC 2 Memasuki Waktu Istirahat Kedua" },
-            { start: "03:30", end: "03:45", text: "RTC 3 Istirahat Kedua", sound: "RTC 3 Memasuki Waktu Istirahat Kedua" },
-          	{ start: "04:30", end: "05:00", text: "RTC 1 Istirahat Kedua", sound: "RTC 1 Memasuki Waktu Istirahat Ketiga" },
-            { start: "05:00", end: "05:30", text: "RTC 2 Istirahat Kedua", sound: "RTC 2 Memasuki Waktu Istirahat Ketiga" },
-            { start: "05:30", end: "06:00", text: "RTC 3 Istirahat Kedua", sound: "RTC 3 Memasuki Waktu Istirahat Ketiga" }
+            { start: "08:45", end: "09:00", text: "RTC 1 Istirahat Pertama", audio: "./audio/rtc1_istirahat.mp3" },
+            { start: "12:00", end: "12:15", text: "RTC 1 Istirahat Kedua", audio: "./audio/rtc1_istirahat.mp3" },
+            { start: "14:35", end: "14:47", text: "RTC 1 Istirahat Ketiga", audio: "./audio/rtc1_istirahat.mp3" },
+            { start: "14:38", end: "25:49", text: "RTC 2 Istirahat Pertama", audio: "./audio/rtc2_istirahat.mp3" },
+            { start: "12:15", end: "12:30", text: "RTC 2 Istirahat Kedua", audio: "./audio/rtc2_istirahat.mp3" },
+            { start: "14:00", end: "14:15", text: "RTC 2 Istirahat Ketiga", audio: "./audio/rtc2_istirahat.mp3" }
         ];
 
-        let lastSchedule = null;
+        let currentAudioPlayed = null; // Untuk mencegah audio diputar berulang-ulang
 
-        function playScheduleSound(audioUrl) {
-            const audio = new Audio(audioUrl);
-            audio.play();
+        function playAudio(url) {
+            const audio = document.getElementById("audio");
+            audio.src = url;
+            audio.play().catch(error => console.log("Error playing audio:", error));
         }
 
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
-
             const currentTime = `${hours}:${minutes}`;
-            const activeSchedule = schedules.find(schedule => schedule.start === currentTime);
+            const message = document.getElementById("message");
 
-            if (activeSchedule && lastSchedule !== activeSchedule.text) {
-                // Display message and play sound
-                document.getElementById("message").textContent = activeSchedule.text;
-                playScheduleSound(activeSchedule.soundFile);
-                lastSchedule = activeSchedule.text;
+            // Cari jadwal yang aktif berdasarkan waktu mulai dan waktu berakhir
+            const activeSchedule = schedules.find(schedule => 
+                schedule.start <= currentTime && currentTime < schedule.end
+            );
+
+            if (activeSchedule) {
+                // Tampilkan pesan hanya jika jadwal aktif
+                message.textContent = activeSchedule.text;
+
+                // Putar audio hanya sekali saat waktu mulai
+                if (currentTime === activeSchedule.start && currentAudioPlayed !== activeSchedule.audio) {
+                    playAudio(activeSchedule.audio);
+                    currentAudioPlayed = activeSchedule.audio;
+                }
+            } else {
+                // Reset pesan dan audio jika tidak ada jadwal aktif
+                message.textContent = "Tidak ada jadwal istirahat aktif.";
+                currentAudioPlayed = null;
             }
         }
 
         setInterval(updateClock, 1000);
-
-        // Calendar Script
-        function generateCalendar() {
-            const calendar = document.getElementById("calendar").getElementsByTagName('tbody')[0];
-            const today = new Date();
-            const month = today.getMonth();
-            const year = today.getFullYear();
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            let date = 1;
-            calendar.innerHTML = '';
-
-            for (let i = 0; i < 6; i++) {
-                const row = document.createElement('tr');
-                for (let j = 0; j < 7; j++) {
-                    const cell = document.createElement('td');
-                    if (i === 0 && j < firstDay) {
-                        row.appendChild(cell);
-                    } else if (date <= daysInMonth) {
-                        if (date === today.getDate()) {
-                            cell.classList.add('today');
-                        }
-                        cell.textContent = date;
-                        row.appendChild(cell);
-                        date++;
-                    }
-                }
-                calendar.appendChild(row);
-            }
-
-        }
-
-        generateCalendar();
     </script>
 </body>
 </html>
