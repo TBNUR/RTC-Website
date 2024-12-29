@@ -98,7 +98,7 @@
 <body>
     <div class="container">
         <h1>Road Traffic Control Jam Istirahat</h1>
-        <div class="clock" id="clock">00:00:00</div>
+        <div class="clock" id="clock">00:00</div>
         <div class="message" id="message"></div>
     </div>
     <div class="calendar">
@@ -122,40 +122,16 @@
     </div>
 
     <script type="text/javascript">
-        // Schedule and Sound Configuration
         const schedules = [
-            { start: "08:45", end: "09:00", text: "RTC 1 Istirahat Pertama", sound: "RTC 1 Memasuki Waktu Istirahat Pertama" },
-            { start: "09:00", end: "09:15", text: "RTC 2 Istirahat Pertama", sound: "RTC 2 Memasuki Waktu Istirahat Pertama" },
-            { start: "09:15", end: "09:30", text: "RTC 3 Istirahat Pertama", soundFile: "https://drive.google.com/uc?export=download&id=1sRibYVNmay6tXMm6fpkocPEFiomWUEfe" },
-            { start: "12:00", end: "12:15", text: "RTC 1 Istirahat Kedua", sound: "RTC 1 Memasuki Waktu Istirahat Kedua" },
-            { start: "12:15", end: "12:30", text: "RTC 2 Istirahat Kedua", sound: "RTC 2 Memasuki Waktu Istirahat Kedua" },
-            { start: "12:30", end: "12:45", text: "RTC 3 Istirahat Kedua", sound: "RTC 3 Memasuki Waktu Istirahat Kedua" },
-            { start: "13:30", end: "14:00", text: "RTC 1 Istirahat Ketiga", sound: "RTC 1 Memasuki Waktu Istirahat Ketiga" },
-            { start: "14:00", end: "14:30", text: "RTC 2 Istirahat Ketiga", sound: "RTC 2 Memasuki Waktu Istirahat Ketiga" },
-            { start: "14:30", end: "15:00", text: "RTC 3 Istirahat Ketiga", sound: "RTC 3 Memasuki Waktu Istirahat Ketiga" },
-            { start: "15:30", end: "15:45", text: "RTC 1 Istirahat Pertama", sound: "RTC 1 Memasuki Waktu Istirahat Pertama" },
-            { start: "15:45", end: "16:00", text: "RTC 2 Istirahat Pertama", sound: "RTC 2 Memasuki Waktu Istirahat Pertama" },
-            { start: "14:43", end: "14:44", text: "RTC 3 Istirahat Pertama", audio: "./audio/rtc1_istirahat.mp3" },
-            { start: "14:44", end: "14:45", text: "RTC 1 Istirahat Kedua", audio: "/audio/rtc2_istirahat.mp3" },
-            { start: "18:30", end: "19:00", text: "RTC 2 Istirahat Kedua", sound: "RTC 2 Memasuki Waktu Istirahat Kedua" },
-            { start: "19:00", end: "19:30", text: "RTC 3 Istirahat Kedua", sound: "RTC 3 Memasuki Waktu Istirahat Kedua" },
-            { start: "20:00", end: "20:15", text: "RTC 1 Istirahat Ketiga", sound: "RTC 1 Memasuki Waktu Istirahat Ketiga" },
-            { start: "20:15", end: "20:30", text: "RTC 2 Istirahat Ketiga", sound: "RTC 2 Memasuki Waktu Istirahat Ketiga" },
-            { start: "20:30", end: "20:45", text: "RTC 3 Istirahat Ketiga", sound: "RTC 3 Memasuki Waktu Istirahat Ketiga" },
-            { start: "00:45", end: "01:00", text: "RTC 1 Istirahat Pertama", sound: "RTC 1 Memasuki Waktu Istirahat Pertama" },
-            { start: "01:00", end: "01:15", text: "RTC 2 Istirahat Pertama", sound: "RTC 2 Memasuki Waktu Istirahat Pertama" },
-            { start: "01:15", end: "01:30", text: "RTC 3 Istirahat Pertama", sound: "RTC 3 Memasuki Waktu Istirahat Pertama" },
-            { start: "03:00", end: "03:15", text: "RTC 1 Istirahat Kedua", sound: "RTC 1 Memasuki Waktu Istirahat Kedua" },
-            { start: "03:15", end: "03:30", text: "RTC 2 Istirahat Kedua", sound: "RTC 2 Memasuki Waktu Istirahat Kedua" },
-            { start: "03:30", end: "03:45", text: "RTC 3 Istirahat Kedua", sound: "RTC 3 Memasuki Waktu Istirahat Kedua" },
-          	{ start: "04:30", end: "05:00", text: "RTC 1 Istirahat Kedua", sound: "RTC 1 Memasuki Waktu Istirahat Ketiga" },
-            { start: "05:00", end: "05:30", text: "RTC 2 Istirahat Kedua", sound: "RTC 2 Memasuki Waktu Istirahat Ketiga" },
-            { start: "05:30", end: "06:00", text: "RTC 3 Istirahat Kedua", sound: "RTC 3 Memasuki Waktu Istirahat Ketiga" }
+            { start: "14:48", end: "14:49", text: "RTC 1 Istirahat Pertama", audio: "./audio/rtc1_istirahat.mp3" },
+            { start: "14:49", end: "14:50", text: "RTC 2 Istirahat Pertama", audio: "./audio/rtc2_istirahat.mp3" },
+            { start: "14:50", end: "14:51", text: "RTC 3 Istirahat Pertama", audio: "./audio/rtc3_istirahat.mp3" },
         ];
 
         let lastSchedule = null;
 
         function playScheduleSound(audioUrl) {
+            if (!audioUrl) return;
             const audio = new Audio(audioUrl);
             audio.play();
         }
@@ -164,23 +140,20 @@
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById("clock").textContent = `${hours}:${minutes}`;
 
             const currentTime = `${hours}:${minutes}`;
             const activeSchedule = schedules.find(schedule => schedule.start === currentTime);
 
             if (activeSchedule && lastSchedule !== activeSchedule.text) {
-                // Display message and play sound
                 document.getElementById("message").textContent = activeSchedule.text;
-                playScheduleSound(activeSchedule.soundFile);
+                playScheduleSound(activeSchedule.audio);
                 lastSchedule = activeSchedule.text;
             }
         }
 
         setInterval(updateClock, 1000);
 
-        // Calendar Script
         function generateCalendar() {
             const calendar = document.getElementById("calendar").getElementsByTagName('tbody')[0];
             const today = new Date();
@@ -214,4 +187,3 @@
     </script>
 </body>
 </html>
-
